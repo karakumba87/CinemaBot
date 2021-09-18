@@ -1,46 +1,77 @@
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
-import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class MessageHandler {
-    private static String helpMessage = "/help";
-    private static String messageGetAll = "/all";
-    private static String stopMessage = "/stop";
-
-    public static SendMessage getRequest(Update update) {
-        SendMessage message = new SendMessage();
-
-        try {
-            if (update.getMessage().getText().equals(messageGetAll)) {
-                List<Map> data = new ArrayList<>();
-                data.addAll(ParseSiteCinemaPark.getPage());
-                message.setChatId(update.getMessage().getChatId().toString());
-
-                for (int i = 0; i < data.size(); i++) {
-                    Map<String, String> dataMap = new HashMap<>(data.get(i));
-                    if(message.getText() != null)
-                        message.setText(message.getText() + "\n" +
-                                "<b>" + (i+1) + ". " + dataMap.get("title") + "</b>" +
-                                "\n" + dataMap.get("genre") +
-                                "\n" + dataMap.get("country"));
-                    else
-                        message.setText("<b>" + "1. " + dataMap.get("title") + "</b>" +
-                                "\n" + dataMap.get("genre") +
-                                "\n" + dataMap.get("country"));
-                }
-                message.setParseMode("HTML");
+    public void getRequest(Update update, TelegramBot bot) {
+            if (update.getMessage().getText().equals(botCommantList.getAllFilms)) {
+                getAllFilmsMessage(update, bot);
             }
+            else if (update.getMessage().getText().equals(botCommantList.getStart) |
+                    update.getMessage().getText().equals(botCommantList.getHelp)) {
+                getStartAndHelpMessage(update, bot);
+            }
+            else if (Integer.valueOf(update.getMessage().getText()) > 0 &
+                    Integer.valueOf(update.getMessage().getText()) <= ParseSiteCinemaPark.getListRef().size()) {
+                getDescriptionOfFilm(update, bot);
+            }
+    }
 
-        } catch (IOException ex) {
-            ex.printStackTrace();
+    private void getStartAndHelpMessage(Update update, TelegramBot bot) {
+        SendMessage message = new SendMessage();
+        message.setChatId(update.getMessage().getChatId().toString());
+        message.setText("<b>" + "Список команд:" + "</b>" + "\n" + "<b>" + "/start" + "</b>" + " и " +
+                "<b>" + "/help" + "</b>" + " - выводят список доступных команд.\n" +
+                "<b>" + "/all" + "</b>" + " - выводит список всех фильмов доступных сегодня в кинотеатре.\n");
+        message.setParseMode("HTML");
+        bot.sendMessage(message);
+    }
+
+    private void getAllFilmsMessage(Update update, TelegramBot bot) {
+        SendMessage message = new SendMessage();
+        List<Map> data = new ArrayList<>();
+        data.addAll(ParseSiteCinemaPark.getListRef());
+
+        message.setChatId(update.getMessage().getChatId().toString());
+        for (int i = 0; i < data.size(); i++) {
+            Map<String, String> dataMap = new HashMap<>(data.get(i));
+            if(message.getText() != null) {
+                message.setText(message.getText() + "\n" +
+                        "<b>" + (i + 1) + ". " + dataMap.get("title") + "</b>" +
+                        "\n" + dataMap.get("genre") +
+                        "\n" + dataMap.get("country"));
+            }
+            else {
+                message.setText("<b>" + "1. " + dataMap.get("title") + "</b>" +
+                        "\n" + dataMap.get("genre") +
+                        "\n" + dataMap.get("country"));
+            }
         }
+        message.setParseMode("HTML");
+        bot.sendMessage(message);
 
-        return message;
+    }
+
+    private void getDescriptionOfFilm(Update update, TelegramBot bot) {
+        SendMessage message = new SendMessage();
+        List<Map> data = new ArrayList<>();
+        data.addAll(ParseSiteCinemaPark.getListRef());
+        Integer i = Integer.valueOf(update.getMessage().getText());
+        Map<String, String> dataMap = new HashMap<>(data.get(i));
+
+        message.setChatId(update.getMessage().getChatId().toString());
+        message.setText(dataMap.get("link") + "\n" +
+                "<b>" + dataMap.get("title") + "</b>" + "\n" +
+                dataMap.get("duration") + "\n" +
+                dataMap.get("country") + "\n" +
+                dataMap.get("genre") + "\n" +
+                dataMap.get("director") + "\n" +
+                dataMap.get("description"));
+        message.setParseMode("HTML");
+        bot.sendMessage(message);
     }
 }
