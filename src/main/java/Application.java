@@ -13,14 +13,11 @@ import java.net.URLConnection;
 
 public class Application {
     public static void main(String[] args) throws IOException {
-        //ParseSiteCinemaPark parcer = new ParseSiteCinemaPark();
+        //ParseSiteCinemaPark parser = new ParseSiteCinemaPark();
 
         TelegramBot bot = new TelegramBot();
         bot.setBotToken("");
-        bot.setBotUsername("");
-
+        bot.setBotUsername("CheckCinemaSaratovBot");
         bot.botConnect();
-
-
     }
 }
