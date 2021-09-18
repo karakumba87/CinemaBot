@@ -1,6 +1,5 @@
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
@@ -9,29 +8,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ParseSiteCinemaPark {
     private static List <String> listRef = new ArrayList<>();
 
-    /* Value keys in the Map films
-    title
-    duration
-    ratings - not implemented
-    genre
-    director
-    description
-     */
     private static List <Map> wordsFilm = new ArrayList<>();
 
-    public static List<Map> getPage() throws IOException {
+    public static List getListRef() {
+        return wordsFilm;
+    }
+
+    public static List<Map> preLoad() throws IOException {
         String url = "https://kinoteatr.ru/kinoafisha/saratov/";
-        Document page = Jsoup.parse(new URL(url), 2000);
+        Document page = Jsoup.parse(new URL(url), 5000);
         Elements stickerFilms = page.select("a[class=movie_card_clickable_zone gtm-ec-list-item-movie]");
 
         listRef = stickerFilms.eachAttr("href");
-
         parsePageLink();
 
         return wordsFilm;
