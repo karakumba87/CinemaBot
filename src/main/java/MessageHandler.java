@@ -26,7 +26,8 @@ public class MessageHandler {
         message.setChatId(update.getMessage().getChatId().toString());
         message.setText("<b>" + "Список команд:" + "</b>" + "\n" + "<b>" + "/start" + "</b>" + " и " +
                 "<b>" + "/help" + "</b>" + " - выводят список доступных команд.\n" +
-                "<b>" + "/all" + "</b>" + " - выводит список всех фильмов доступных сегодня в кинотеатре.\n");
+                "<b>" + "/all" + "</b>" + " - выводит список всех фильмов доступных сегодня в кинотеатре.\n" +
+                "<b>" + "n" + "</b>" + " - где \"n\" - номер фильма. Выводит информацию о выбранном фильме.\n");
         message.setParseMode("HTML");
         bot.sendMessage(message);
     }
@@ -61,7 +62,7 @@ public class MessageHandler {
         List<Map> data = new ArrayList<>();
         data.addAll(ParseSiteCinemaPark.getListRef());
         Integer i = Integer.valueOf(update.getMessage().getText());
-        Map<String, String> dataMap = new HashMap<>(data.get(i));
+        Map<String, String> dataMap = new HashMap<>(data.get(i-1));
 
         message.setChatId(update.getMessage().getChatId().toString());
         message.setText(dataMap.get("link") + "\n" +

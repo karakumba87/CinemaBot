@@ -33,7 +33,7 @@ public class ParseSiteCinemaPark {
     private static void parsePageLink() throws IOException{
         for(int i = 0; i < listRef.size(); i++) {
             Map<String, String> words = new HashMap();
-            Document linkPage = Jsoup.parse(new URL(listRef.get(i)), 2000);
+            Document linkPage = Jsoup.parse(new URL(listRef.get(i)), 5000);
             Elements titleTag = linkPage.select("h1[itemprop=name]");
             Elements durationTag = linkPage.select("p[style=white-space: nowrap;]");
             Elements countryTag = linkPage.select("span[itemprop=countryOfOrigin]");
