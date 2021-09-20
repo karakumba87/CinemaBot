@@ -1,2 +1,0 @@
-bot.setBotToken("1993378492:AAENWgSPIy8zjK3YgNRyOQOC4B8xY735FMk");
-bot.setBotUsername("CheckCinemaSaratovBot");
