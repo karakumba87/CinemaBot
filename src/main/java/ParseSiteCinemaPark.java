@@ -35,12 +35,14 @@ public class ParseSiteCinemaPark {
             Map<String, String> words = new HashMap();
             Document linkPage = Jsoup.parse(new URL(listRef.get(i)), 5000);
             Elements titleTag = linkPage.select("h1[itemprop=name]");
+            Elements rateTag = linkPage.select("div[class=rate]");
             Elements durationTag = linkPage.select("p[style=white-space: nowrap;]");
             Elements countryTag = linkPage.select("span[itemprop=countryOfOrigin]");
             Elements genreTag = linkPage.select("span[itemprop=genre]");
             Elements directorTag = linkPage.select("span[itemprop=director]");
             Elements descriptionTag = linkPage.select("p[itemprop=description]");
             words.put("title", titleTag.text());
+            words.put("rate", rateTag.text());
             words.put("duration", durationTag.text());
             words.put("country", countryTag.text());
             words.put("genre", genreTag.text());
